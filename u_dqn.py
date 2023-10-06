@@ -16,6 +16,8 @@ from skimage.transform import resize
 
 INFINITY = 10 ** 20
 
+device = 'cuda:3'
+
 class DeepQNet:
     def __init__(self, env_name):
         self.env_name = env_name
@@ -112,7 +114,8 @@ class DeepQNet:
         new_state = torch.stack([x[3] for x in batch], dim=0).to(device)
         finished = torch.FloatTensor([x[4] for x in batch]).to(device)
         
-        max_q = (target_net(new_state)-0.2*abs(torch.randn(len(new_state),4).to(device))).max(dim=1)[0]
+        #max_q = (target_net(new_state)-0.01*(target_net(new_state)+abs(torch.randn(len(new_state),4).to(device)))).max(dim=1)[0]
+        max_q = (target_net(new_state)-0.01*abs(torch.randn(len(new_state),4).to(device))).max(dim=1)[0]
         mask = 1 - finished
         max_q *= mask
         target = reward + discount_factor * max_q
@@ -175,7 +178,7 @@ class DeepQNet:
 
         # intialise action value function q with random weights
         self.net.train()
-        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        #device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.net.to(device)
 
         # initialise target action value function

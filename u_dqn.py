@@ -14,9 +14,11 @@ from tqdm import tqdm
 from skimage import color
 from skimage.transform import resize
 
+import wandb
+
 INFINITY = 10 ** 20
 
-device = 'cuda:3'
+device = 'cuda:0'
 
 class DeepQNet:
     def __init__(self, env_name):
@@ -115,7 +117,8 @@ class DeepQNet:
         finished = torch.FloatTensor([x[4] for x in batch]).to(device)
         
         #max_q = (target_net(new_state)-0.01*(target_net(new_state)+abs(torch.randn(len(new_state),4).to(device)))).max(dim=1)[0]
-        max_q = (target_net(new_state)-0.01*abs(torch.randn(len(new_state),4).to(device))).max(dim=1)[0]
+        #max_q = (target_net(new_state)-0.01*abs(torch.randn(len(new_state),4).to(device))).max(dim=1)[0]
+        max_q = target_net(new_state).max(dim=1)[0]
         mask = 1 - finished
         max_q *= mask
         target = reward + discount_factor * max_q
@@ -254,7 +257,8 @@ class DeepQNet:
                     env.close()
                     writer.close()
                     return
-
+            
+            wandb.log({"episode_reward" : episode_reward, "episode_loss": episode_loss / episode_net_updates}, step=frame_number)
             writer.add_scalar("episode_reward", episode_reward, frame_number)
             writer.add_scalar("episode_loss", episode_loss / episode_net_updates, frame_number)
 

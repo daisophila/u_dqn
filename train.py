@@ -1,4 +1,5 @@
 import argparse
+import wandb
 
 from u_dqn import DeepQNet
 
@@ -8,7 +9,7 @@ if __name__ == "__main__":
     parser.add_argument("weight_save_path", help="path to where save the game", type=str)
     parser.add_argument("--training_frames", default=10000000, type=int)
     parser.add_argument("--minibatch_size", default=32, type=int)
-    parser.add_argument("--replay_memory_size", default=100000, type=int)
+    parser.add_argument("--replay_memory_size", default=1000000, type=int)
     parser.add_argument("--target_network_update_frequency", default=10000, type=int)
     parser.add_argument("--discount_factor", default=0.99, type=float)
     parser.add_argument("--learning_rate", default=0.0001, type=float)
@@ -20,6 +21,21 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     checkpoint_path = args.weight_save_path if args.checkpoint else None
+
+    wandb.init(
+        # set the wandb project where this run will be logged
+        project="u_dqn",
+        
+        # track hyperparameters and run metadata
+        config={
+        "learning_rate": 'Default',
+        "architecture": "DQN",
+        "environment": args.game_name,
+        "u_coef" : 0.0,
+        }
+    )
+    wandb.run.name = args.weight_save_path
+    wandb.run.save()
 
     qnet = DeepQNet(env_name=args.game_name)
     qnet.train(training_frames=args.training_frames,

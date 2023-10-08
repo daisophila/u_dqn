@@ -1,0 +1,42 @@
+wandb_version: 1
+
+learning_rate:
+  desc: null
+  value: Default
+architecture:
+  desc: null
+  value: DQN
+environment:
+  desc: null
+  value: ALE/Breakout-v5
+u_coef:
+  desc: null
+  value: 0.0
+_wandb:
+  desc: null
+  value:
+    python_version: 3.9.12
+    cli_version: 0.15.12
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1696572865.918832
+    t:
+      1:
+      - 1
+      - 55
+      2:
+      - 1
+      - 55
+      3:
+      - 16
+      - 17
+      - 23
+      - 37
+      4: 3.9.12
+      5: 0.15.12
+      8:
+      - 5
+      10:
+      - 3
+      13: linux-x86_64

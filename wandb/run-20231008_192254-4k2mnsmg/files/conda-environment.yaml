@@ -1,0 +1,4 @@
+name: u_dqn4
+channels:
+  - defaults
+prefix: /home/jongchan/.conda/envs/u_dqn4
